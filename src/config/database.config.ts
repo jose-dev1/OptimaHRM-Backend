@@ -1,7 +1,9 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import * as dontenv from 'dotenv';
+import { Empresa } from '../modules/empresa/empresa.entity';
+import { Usuario } from '../modules/usuarios/user.entity';
+import * as dotenv from 'dotenv';
 
-dontenv.config();
+dotenv.config();
 
 export const databaseConfig: TypeOrmModuleOptions = {
     type: 'mysql',
@@ -10,8 +12,8 @@ export const databaseConfig: TypeOrmModuleOptions = {
     username: process.env.DATABASE_USERNAME,
     password: process.env.DATABASE_PASSWORD,
     database: process.env.DATABASE_NAME,
-    entities: [__dirname + '/../modules/**/*.entity.ts'],
-    synchronize: true,
+    entities: [Usuario, Empresa],
+    synchronize: false,
     extra: {
         authPlugins: {
             defaultAuth: 'mysql_native_password',
