@@ -3,13 +3,14 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Usuario } from '../../modules/usuarios/user.entity';
+import { Empresa } from '../empresa/empresa.entity';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([Usuario]),
+        TypeOrmModule.forFeature([Usuario, Empresa]),
         PassportModule,
         JwtModule.register({
             secret: process.env.JWT_SECRET || 'tu_clave_secreta',

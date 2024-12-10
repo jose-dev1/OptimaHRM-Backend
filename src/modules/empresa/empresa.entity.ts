@@ -1,9 +1,9 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryColumn, OneToMany } from 'typeorm';
 import { Usuario } from '../usuarios/user.entity';
 
 @Entity({ name: 'Empresas' })
 export class Empresa {
-    @PrimaryGeneratedColumn()
+    @PrimaryColumn()
     id_empresa: string;
 
     @Column({ nullable: false })
@@ -13,13 +13,19 @@ export class Empresa {
     direccion: string;
 
     @Column({ nullable: false })
-    telefono: string;
+    correo: string;
 
     @Column({ nullable: false })
-    correo_contacto: string;
+    contraseña: string;
 
-    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-    fecha_registro: Date;
+    @Column({ nullable: false })
+    tipo_usuario: 'usuario' | 'empresa';
+
+    @Column({ nullable: false })
+    sector: 'tecnología' | 'salud' | 'educación' | 'otros';
+
+    @Column({ type: 'enum', enum: ['activo', 'desactivado'], default: 'activo' })
+    estado: string;
 
     @OneToMany(() => Usuario, (usuario) => usuario.empresa)
     usuarios: Usuario[];
