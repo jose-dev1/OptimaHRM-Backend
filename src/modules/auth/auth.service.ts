@@ -22,28 +22,35 @@ export class AuthService {
     async autenticar(loginDto: LoginUsuarioDto) {
         const { correo, contraseña } = loginDto;
 
-        const usuario = await this.usuariosRepository.findOne({ where: { correo } });
+        const usuario = await this.usuariosRepository.findOne({
+            where: { correo },
+            relations: ['tipo_usuario'],
+        });
+
         if (usuario) {
             const validPassword = await bcrypt.compare(contraseña, usuario.contraseña);
             if (validPassword) {
                 const payload = {
-                    id: usuario.id_usuario,
+                    id: usuario.numero_doc,
                     rol: usuario.rol,
-                    tipo: 'usuario',
+                    tipo_usuario: usuario.tipo_usuario.nombre_tipo_usuario,
                 };
                 const token = this.jwtService.sign(payload);
                 return { token, tipo: 'usuario', data: usuario };
             }
         }
 
-        const empresa = await this.empresasRepository.findOne({ where: { correo } });
+        const empresa = await this.empresasRepository.findOne({
+            where: { correo },
+            relations: ['tipoUsuario'],
+        });
+
         if (empresa) {
             const validPassword = await bcrypt.compare(contraseña, empresa.contraseña);
             if (validPassword) {
                 const payload = {
                     id: empresa.id_empresa,
-                    rol: 'empresa',
-                    tipo: 'empresa',
+                    tipo_usuario: empresa.tipoUsuario.nombre_tipo_usuario,
                 };
                 const token = this.jwtService.sign(payload);
                 return { token, tipo: 'empresa', data: empresa };
@@ -52,4 +59,5 @@ export class AuthService {
 
         throw new UnauthorizedException('Credenciales incorrectas');
     }
+
 }

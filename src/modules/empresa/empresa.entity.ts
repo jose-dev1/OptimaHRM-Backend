@@ -1,32 +1,53 @@
-import { Entity, Column, PrimaryColumn, OneToMany } from 'typeorm';
-import { Usuario } from '../usuarios/user.entity';
+import { Entity, PrimaryColumn, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import { TipoDocumento } from '../../entidades/tipo-documento/tipo-documento.entity';
+import { SectorTrabajo } from '../../entidades/sector/sector-trabajo.entity';
+import { TipoUsuario } from '../../entidades/tipo-usuario/tipo-usuario.entity';
+import { Usuario } from '../../modules/usuarios/user.entity';
 
-@Entity({ name: 'Empresas' })
+@Entity('Empresas')
 export class Empresa {
     @PrimaryColumn()
     id_empresa: string;
 
-    @Column({ nullable: false })
-    nombre: string;
+    @Column()
+    nombre_empresa: string;
 
-    @Column({ nullable: false })
+    @Column()
+    nombre_representante: string;
+
+    @Column()
+    numdoc_representante: string;
+
+    @Column()
     direccion: string;
 
-    @Column({ nullable: false })
+    @Column({ unique: true })
     correo: string;
 
-    @Column({ nullable: false })
+    @Column()
     contraseña: string;
 
-    @Column({ nullable: false })
-    tipo_usuario: 'usuario' | 'empresa';
+    @Column()
+    id_tipo_usuario: number;
 
-    @Column({ nullable: false })
-    sector: 'tecnología' | 'salud' | 'educación' | 'otros';
+    @Column()
+    sector: number;
 
-    @Column({ type: 'enum', enum: ['activo', 'desactivado'], default: 'activo' })
-    estado: string;
+    @Column()
+    id_tipo_documento: number;
 
-    @OneToMany(() => Usuario, (usuario) => usuario.empresa)
+    @ManyToOne(() => TipoDocumento)
+    @JoinColumn({ name: 'id_tipo_documento' })
+    tipoDocumento: TipoDocumento;
+
+    @ManyToOne(() => SectorTrabajo)
+    @JoinColumn({ name: 'sector' })
+    sectorTrabajo: SectorTrabajo;
+
+    @ManyToOne(() => TipoUsuario)
+    @JoinColumn({ name: 'id_tipo_usuario' })
+    tipoUsuario: TipoUsuario;
+
+    @OneToMany(() => Usuario, usuario => usuario.empresa, { onDelete: 'CASCADE' })
     usuarios: Usuario[];
 }

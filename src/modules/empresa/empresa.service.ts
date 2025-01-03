@@ -26,7 +26,7 @@ export class EmpresaService {
             const hashedPassword = await bcrypt.hash(createEmpresaDto.contraseña, salt);
 
             const empresa = this.empresaRepository.create({
-                id_empresa: createEmpresaDto.nombre,
+                id_empresa: createEmpresaDto.nombre_empresa,
                 ...createEmpresaDto,
                 contraseña: hashedPassword,
             });
